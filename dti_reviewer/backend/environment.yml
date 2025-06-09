@@ -11,5 +11,5 @@ dependencies:
   - pytest
   - sphinx
   - celery
-  - redis-server
+  - redis-py
 
