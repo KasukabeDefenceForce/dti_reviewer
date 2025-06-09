@@ -1,0 +1,15 @@
+name: deepreviewer
+channels:
+  - conda-forge
+dependencies:
+  - flask
+  - pandas
+  - scipy
+  - scikit-learn
+  - flask_cors
+  - gunicorn
+  - pytest
+  - sphinx
+  - celery
+  - redis-py
+
