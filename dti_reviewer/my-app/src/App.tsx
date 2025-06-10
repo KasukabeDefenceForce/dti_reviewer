@@ -17,6 +17,8 @@ function App() {
   const handleQuery = (e: ChangeEvent<HTMLTextAreaElement>): void => {
     setQuery(e.target.value)
   }
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -29,7 +31,7 @@ function App() {
 
     try {
       // 1) Enqueue the task
-      const resp = await fetch("http://127.0.0.1:5000/search", {
+      const resp = await fetch(`${API_BASE_URL}/search`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query }),
@@ -40,9 +42,7 @@ function App() {
 
       // 2) Poll for status
       while (true) {
-        const statusResp = await fetch(
-          `http://127.0.0.1:5000/status/${task_id}`
-        )
+        const statusResp = await fetch(`${API_BASE_URL}/status/${task_id}`)
         if (!statusResp.ok) {
           console.error("Status check error", await statusResp.text())
           break
