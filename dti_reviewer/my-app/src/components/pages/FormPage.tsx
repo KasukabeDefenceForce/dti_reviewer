@@ -83,7 +83,7 @@ const FormPage = () => {
             <div className="w-4/5 m-auto grid grid-cols-5 gap-3">
                 {/* Row 1 */}
                 <div className="col-span-5 flex items-center justify-center lg:hidden">
-                    <img height="70" width="70" className="animate-wiggle animate-infinite" src={logo} />
+                    <img height="50" width="50" className="animate-wiggle animate-infinite" src={logo} />
                     <h1 className="font-bold text-center">DTI Reviewer</h1>
                 </div>
 
@@ -98,7 +98,7 @@ const FormPage = () => {
                             placeholder="Enter your text here..."
                             value={query}
                             onChange={handleQuery}
-                            className="w-full min-h-[80px] md:min-h-[100px] resize-y"
+                            className="w-full min-h-[80px] md:min-h-[100px] resize-y max-h-[300px]"
                             required
                         />
                     </div>
