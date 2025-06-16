@@ -92,23 +92,25 @@ const FormPage = () => {
                     onSubmit={handleSubmit}
                     className="grid grid-cols-1 md:grid-cols-5 border-none shadow-lg rounded-lg md:gap-4 col-span-5"
                 >
-                    <div className="md:col-span-4 pt-6 pr-6 pl-6 pb-0 md:pb-6 md:pr-0">
-                        <h3>Enter your abstract</h3>
+                    <div className="md:col-span-5 p-6">
+                        <h2>Find a physics expert</h2>
+                        <p className="text-gray-600">
+                            Paste a research abstract or topic below to discover similar physics researchers.
+                        </p>
                         <Textarea
-                            placeholder="Enter your text here..."
+                            autoFocus
+                            placeholder="Paste your research abstract or topic here…"
                             value={query}
                             onChange={handleQuery}
-                            className="w-full min-h-[80px] md:min-h-[100px] resize-y max-h-[300px]"
+                            className="mb-2 w-full min-h-[50px] md:min-h-[60px] resize-y max-h-[300px]"
                             required
                         />
-                    </div>
-                    <div className="md:col-span-1 flex flex-col justify-end p-6 md:pl-0">
                         <Button
                             type="submit"
                             disabled={loading}
                             className={`w-full ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-primary hover:bg-primary/90"}`}
                         >
-                            {loading ? <span>Searching…</span> : <span>Search</span>}
+                            <strong>{loading ? <span>Searching…</span> : <span>Search</span>}</strong>
                         </Button>
                     </div>
                 </form>
@@ -151,10 +153,10 @@ const FormPage = () => {
                                 </p>
                             </div>
                         ) : tableData.length === 0 ? (
-                            <>
+                            <div className="flex flex-col items-center justify-center h-full">
                                 <img src={NoResults} alt="No results" className="w-20 h-20 mx-auto mb-4" />
                                 <p className="text-center text-lg">No results</p>
-                            </>
+                            </div>
                         ) : (
                             <div className="pt-0 p-4 rounded-lg">
                                 <ResultTable dataToDisplay={tableData} />
