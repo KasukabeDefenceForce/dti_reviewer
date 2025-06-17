@@ -2,14 +2,19 @@ from celery_app import celery
 from similarity_engine import SimilarityEngine
 from sklearn.metrics.pairwise import cosine_similarity
 
-engine = SimilarityEngine()
-engine.load_index_or_build()
+engine = None
+
+def initialize_similarity_engine():
+    global engine
+    if engine is None:
+        engine = SimilarityEngine()
+        engine.load_index_or_build()
 
 
 @celery.task(bind=True)
 def query_experts_task(self, query_text: str, top_n: int = 25):
     self.update_state(state="PROGRESS", meta={"percent": 0.05})
-    engine.load_index_or_build()
+    initialize_similarity_engine()
 
     self.update_state(state="PROGRESS", meta={"percent": 0.10})
     q_vec = engine.vectorizer.transform([query_text])
