@@ -1,4 +1,3 @@
-# .github/workflows/build-docs.yml
 name: Build & Deploy Docs
 
 on:
@@ -12,7 +11,7 @@ defaults:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    if: ${{ github.repository_owner != 'deepthought-initiative' }}
     steps:
       - uses: actions/checkout@v4
 
