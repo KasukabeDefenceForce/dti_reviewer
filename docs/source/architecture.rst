@@ -1,13 +1,13 @@
 Architecture
-===========
+============
 
 Deep Reviewer follows a modern architecture with a clear separation between the frontend and backend components.
 
 Components
----------
+----------
 
 Frontend (React + TypeScript)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The frontend is built using:
 
@@ -24,7 +24,7 @@ Key features:
 - Modern UI components
 
 Backend (Flask + Python)
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 The backend consists of:
 
@@ -40,7 +40,7 @@ Key components:
 - ``similarity_engine.py``: Core matching algorithm
 
 Data Flow
---------
+---------
 
 1. User submits a research abstract through the frontend
 2. Frontend sends the query to the backend API
@@ -49,7 +49,7 @@ Data Flow
 5. Frontend displays the ranked list of experts
 
 Similarity Engine
----------------
+-----------------
 
 The similarity engine uses:
 

@@ -1,10 +1,10 @@
 Getting Started
-==============
+===============
 
 This guide will help you get Deep Reviewer up and running on your local machine.
 
 Installation
------------
+------------
 
 1. Clone the repository:
 
@@ -29,7 +29,7 @@ Installation
       npm install
 
 Running the Application
----------------------
+-----------------------
 
 1. Start the backend server:
 
@@ -50,7 +50,7 @@ Running the Application
 3. Access the frontend application at http://localhost:5173
 
 Using Docker
------------
+------------
 
 Alternatively, you can run the entire application using Docker Compose:
 

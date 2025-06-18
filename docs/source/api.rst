@@ -21,10 +21,10 @@ Summary Table
 
 
 Endpoints
-~~~~~~~~~~~~~
+~~~~~~~~~
 
 Search Experts
----------
+--------------
 
 Find experts based on a research abstract.
 
