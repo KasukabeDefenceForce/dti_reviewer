@@ -23,7 +23,7 @@ jobs:
 
       - name: Build HTML
         working-directory: docs
-        run: make html
+        run: micromamba run -n docs-env -- make html
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
