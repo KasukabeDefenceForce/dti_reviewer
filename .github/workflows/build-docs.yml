@@ -12,17 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-
       - name: Set up micromamba
         uses: mamba-org/setup-micromamba@v1
         with:
           environment-name: docs-env
           create-args: >-
-            python=3.x
+            python=3
             sphinx
             sphinx_rtd_theme
 
