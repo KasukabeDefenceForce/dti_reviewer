@@ -4,9 +4,18 @@ import pandas as pd
 from scipy import sparse
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from abc import ABC, abstractmethod
 
-
-class SimilarityEngine:
+class BaseSimilarityEngine(ABC):
+    name = "BaseSimilarityEngine"
+    description = "Base class for similarity engines"
+    def __init__(self):
+        pass
+    @abstractmethod
+    def query_experts(self, query_text: str, top_n: int = 25):
+        raise NotImplementedError("Subclasses must implement this method")
+    
+class SimilarityEngineOrcid(BaseSimilarityEngine):
     """
     A class to handle the similarity engine for expert authors.
     It builds and queries a TF-IDF index of author texts.
@@ -103,3 +112,4 @@ class SimilarityEngine:
         results = results.merge(name_variations, on="@path", how="left")
         results = results.rename(columns={"@path": "orcid"})
         return results
+
