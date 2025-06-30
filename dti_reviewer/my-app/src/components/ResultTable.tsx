@@ -50,7 +50,7 @@ export function ResultTable({ dataToDisplay }: ResultTableProps) {
                   rel="noopener noreferrer"
                   className="text-indigo-600 hover:underline"
                 >
-                  {authorInfo.orcid}
+                  {authorInfo.orcid.slice(1)}
                 </a>
               </TableCell>
               <TableCell>{percentFmt.format(authorInfo.similarity)}</TableCell>

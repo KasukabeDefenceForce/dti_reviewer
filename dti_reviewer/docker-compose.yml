@@ -3,8 +3,6 @@ version: '3.8'
 services:
   redis:
     image: redis:7-alpine
-    ports:
-      - "6379:6379"
 
   backend:
     build:
@@ -14,10 +12,11 @@ services:
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
-    ports:
-      - "5000:5000"
+    # ports:
+    #   - "5000:5000"
     depends_on:
       - redis
+    restart: unless-stopped
 
   worker:
     image: dti_reviewer-backend:latest
