@@ -7,19 +7,22 @@ from sklearn.metrics.pairwise import cosine_similarity
 from abc import ABC, abstractmethod
 
 class BaseSimilarityEngine(ABC):
+    engine_id = "base_similarity_engine"
     name = "BaseSimilarityEngine"
     description = "Base class for similarity engines"
-    def __init__(self):
-        pass
+
     @abstractmethod
-    def query_experts(self, query_text: str, top_n: int = 25):
-        raise NotImplementedError("Subclasses must implement this method")
+    def query_experts(self, query_text: str, top_n: int = 25, progress_callback=None):
+        pass
     
 class SimilarityEngineOrcid(BaseSimilarityEngine):
     """
     A class to handle the similarity engine for expert authors.
     It builds and queries a TF-IDF index of author texts.
     """
+    engine_id = "orcid_similarity_engine"
+    name = "ORCID Similarity Engine"
+    description = "TF-IDF based similarity engine for ORCID authors"
 
     def __init__(self):
         self.dataset_path = Path("expert-data/LSPO_v1.h5")
