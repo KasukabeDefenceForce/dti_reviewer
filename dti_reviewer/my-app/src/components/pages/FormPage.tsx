@@ -1,11 +1,26 @@
-import { useState, useRef, type ChangeEvent } from "react"
+import { useState, useRef, type ChangeEvent, useEffect } from "react"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { ResultTable } from "../ResultTable"
 import logo from "../../assets/logo.png"
 import Search from "../../assets/search.svg"
 import NoResults from "../../assets/noResults.png"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
+
+interface Engine {
+  engine_id: string
+  name: string;
+  description: string;
+}
 
 const FormPage = () => {
     const [query, setQuery] = useState<string>("")
@@ -14,17 +29,34 @@ const FormPage = () => {
     const [hasSearched, setHasSearched] = useState<boolean>(false)
     const [percent, setPercent] = useState<number | null>(null)
     const taskIdRef = useRef<string | null>(null)
+    const [allEngines, setAllEngines] = useState<Engine[]>([])
+    const [selectedEngineId, setSelectedEngineId] = useState<string>("")
 
     const handleQuery = (e: ChangeEvent<HTMLTextAreaElement>): void => {
         setQuery(e.target.value)
     }
 
 
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ""
+    // const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ""
 
     // uncomment this in development
-    // const API_BASE_URL = "http://localhost:5000"
+    const API_BASE_URL = "http://localhost:5000"
 
+    useEffect(() => {
+        const fetchAvailableEngines = async() => {
+            try{
+                const resp = await fetch(`${API_BASE_URL}/available_engines`)
+                if (!resp.ok) throw new Error(`Failed to fetch engines: HTTP ${resp.status}`)
+                const availableEngines = await resp.json()
+                if (availableEngines && Array.isArray(availableEngines['engines'])) {
+                    setAllEngines(availableEngines['engines'] || [])
+                }
+            } catch (error) {
+                console.error("Error fetching available engines:", error)
+            }
+        }
+        fetchAvailableEngines()
+    }, [])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -40,7 +72,7 @@ const FormPage = () => {
             const resp = await fetch(`${API_BASE_URL}/search`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ query }),
+                body: JSON.stringify({ query, engine_id: selectedEngineId })
             })
             if (!resp.ok) throw new Error(`Enqueue failed: HTTP ${resp.status}`)
             const { task_id } = await resp.json()
@@ -105,13 +137,36 @@ const FormPage = () => {
                             className="mb-2 w-full min-h-[50px] md:min-h-[60px] resize-y max-h-[300px]"
                             required
                         />
-                        <Button
-                            type="submit"
-                            disabled={loading}
-                            className={`w-full ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-primary hover:bg-primary/90"}`}
-                        >
-                            <strong>{loading ? <span>Searching…</span> : <span>Search</span>}</strong>
-                        </Button>
+                        <div className="flex flex-col md:flex-row items-start md:items-center gap-2">
+                           <Select 
+                                defaultValue={allEngines?.length > 0 ? allEngines[0].engine_id : undefined} 
+                                onValueChange={setSelectedEngineId}
+                            >
+                                <SelectTrigger className="w-[280px]">
+                                    <SelectValue placeholder="Select a model" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Models</SelectLabel>
+                                        {allEngines.map((engine) => (
+                                            <SelectItem
+                                                key={engine.engine_id}
+                                                value={engine.engine_id}
+                                            >
+                                                {engine.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                            <Button
+                                type="submit"
+                                disabled={loading}
+                                className={`ml-auto ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-primary hover:bg-primary/90"}`}
+                            >
+                                <strong>{loading ? <span>Searching…</span> : <span>Search</span>}</strong>
+                            </Button>
+                        </div>
                     </div>
                 </form>
 
