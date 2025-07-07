@@ -6,6 +6,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from abc import ABC, abstractmethod
 import faiss
+import numpy as np
 class BaseSimilarityEngine(ABC):
     engine_id = "base_similarity_engine"
     name = "BaseSimilarityEngine"
