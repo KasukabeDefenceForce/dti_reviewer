@@ -1,4 +1,5 @@
 import { useState, useRef, type ChangeEvent, useEffect } from "react"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { ResultTable } from "../ResultTable"
@@ -6,20 +7,20 @@ import logo from "../../assets/logo.png"
 import Search from "../../assets/search.svg"
 import NoResults from "../../assets/noResults.png"
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select"
 
 
 interface Engine {
-  engine_id: string
-  name: string;
-  description: string;
+    engine_id: string
+    name: string;
+    description: string;
 }
 
 const FormPage = () => {
@@ -31,6 +32,7 @@ const FormPage = () => {
     const taskIdRef = useRef<string | null>(null)
     const [allEngines, setAllEngines] = useState<Engine[]>([])
     const [selectedEngineId, setSelectedEngineId] = useState<string>("")
+    const [enginesLoading, setEnginesLoading] = useState<boolean>(true);
 
     const handleQuery = (e: ChangeEvent<HTMLTextAreaElement>): void => {
         setQuery(e.target.value)
@@ -43,16 +45,21 @@ const FormPage = () => {
     const API_BASE_URL = "http://localhost:5000"
 
     useEffect(() => {
-        const fetchAvailableEngines = async() => {
-            try{
+        const fetchAvailableEngines = async () => {
+            setEnginesLoading(true);
+            try {
                 const resp = await fetch(`${API_BASE_URL}/available_engines`)
                 if (!resp.ok) throw new Error(`Failed to fetch engines: HTTP ${resp.status}`)
                 const availableEngines = await resp.json()
-                if (availableEngines && Array.isArray(availableEngines['engines'])) {
-                    setAllEngines(availableEngines['engines'] || [])
+                const engines = availableEngines?.engines;
+                if (engines && Array.isArray(engines) && engines.length > 0) {
+                    setAllEngines(engines)
+                    setSelectedEngineId(engines[0].engine_id)
                 }
             } catch (error) {
                 console.error("Error fetching available engines:", error)
+            } finally {
+                setEnginesLoading(false);
             }
         }
         fetchAvailableEngines()
@@ -138,34 +145,40 @@ const FormPage = () => {
                             required
                         />
                         <div className="flex flex-col md:flex-row items-start md:items-center gap-2">
-                           <Select 
-                                defaultValue={allEngines?.length > 0 ? allEngines[0].engine_id : undefined} 
-                                onValueChange={setSelectedEngineId}
-                            >
-                                <SelectTrigger className="w-[280px]">
-                                    <SelectValue placeholder="Select a model" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectGroup>
-                                        <SelectLabel>Models</SelectLabel>
-                                        {allEngines.map((engine) => (
-                                            <SelectItem
-                                                key={engine.engine_id}
-                                                value={engine.engine_id}
-                                            >
-                                                {engine.name}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
-                            <Button
-                                type="submit"
-                                disabled={loading}
-                                className={`ml-auto ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-primary hover:bg-primary/90"}`}
-                            >
-                                <strong>{loading ? <span>Searching…</span> : <span>Search</span>}</strong>
-                            </Button>
+                            {enginesLoading ? (
+                                <Skeleton className="h-10 w-[280px]" />
+                            ) : allEngines.length > 0 && (
+                                <>
+                                    <Select
+                                        value={selectedEngineId}
+                                        onValueChange={setSelectedEngineId}
+                                    >
+                                        <SelectTrigger className="w-[280px]">
+                                            <SelectValue placeholder="Select a model" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectLabel>Models</SelectLabel>
+                                                {allEngines.map((engine) => (
+                                                    <SelectItem
+                                                        key={engine.engine_id}
+                                                        value={engine.engine_id}
+                                                    >
+                                                        {engine.name}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                    <Button
+                                        type="submit"
+                                        disabled={loading}
+                                        className={`ml-auto ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-primary hover:bg-primary/90"}`}
+                                    >
+                                        <strong>{loading ? <span>Searching…</span> : <span>Search</span>}</strong>
+                                    </Button>
+                                </>
+                            )}
                         </div>
                     </div>
                 </form>
